@@ -111,43 +111,43 @@ function App() {
 
   if (!currentUser) {
     return (
-      <div className="min-h-screen bg-slate-950 text-slate-100 px-6 py-10 sm:px-10 lg:px-20">
-        <div className="max-w-xl mx-auto rounded-3xl border border-slate-800 bg-slate-900/80 p-10 shadow-xl shadow-cyan-500/10">
-          <h1 className="text-3xl font-semibold text-white">Store Login</h1>
-          <p className="mt-4 text-slate-300">Login as admin or customer to manage products or shop online.</p>
+      <div className="min-h-screen bg-amber-50 text-amber-950 px-6 py-10 sm:px-10 lg:px-20">
+        <div className="max-w-xl mx-auto rounded-3xl border border-amber-200 bg-white p-10 shadow-xl shadow-amber-200/40">
+          <h1 className="text-3xl font-semibold text-amber-950">Store Login</h1>
+          <p className="mt-4 text-amber-700">Login as admin or customer to manage products or shop online.</p>
 
           <div className="mt-8 space-y-4">
-            <label className="block text-sm text-slate-400">
+            <label className="block text-sm text-amber-600">
               Email
               <input
                 type="email"
                 value={loginEmail}
                 onChange={(e) => setLoginEmail(e.target.value)}
-                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-500"
+                className="mt-2 w-full rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-950 outline-none focus:border-amber-500"
                 placeholder="admin@store.com or user@store.com"
               />
             </label>
-            <label className="block text-sm text-slate-400">
+            <label className="block text-sm text-amber-600">
               Password
               <input
                 type="password"
                 value={loginPassword}
                 onChange={(e) => setLoginPassword(e.target.value)}
-                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-500"
+                className="mt-2 w-full rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-950 outline-none focus:border-amber-500"
                 placeholder="admin123 or user123"
               />
             </label>
             <button
               onClick={handleLogin}
-              className="w-full rounded-full bg-cyan-500 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
+              className="w-full rounded-full bg-amber-500 px-6 py-3 text-sm font-semibold text-amber-950 transition hover:bg-amber-400"
             >
               Login
             </button>
-            <div className="rounded-2xl bg-slate-950/60 p-4 text-sm text-slate-300 border border-slate-800">
+            <div className="rounded-2xl bg-amber-100 p-4 text-sm text-amber-700 border border-amber-200">
               <p>Admin: <span className="font-semibold">admin@store.com</span> / admin123</p>
               <p>User: <span className="font-semibold">user@store.com</span> / user123</p>
             </div>
-            {message && <p className="text-sm text-rose-400">{message}</p>}
+            {message && <p className="text-sm text-rose-600">{message}</p>}
           </div>
         </div>
       </div>
@@ -155,29 +155,29 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 px-6 py-8 sm:px-10 lg:px-20">
+    <div className="min-h-screen bg-amber-50 text-amber-950 px-6 py-8 sm:px-10 lg:px-20">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="uppercase tracking-[0.4em] text-sm text-cyan-300">E-Commerce Store</p>
+          <p className="uppercase tracking-[0.4em] text-sm text-amber-600">E-Commerce Store</p>
           <h1 className="mt-3 text-3xl sm:text-4xl font-semibold">Welcome, {currentUser.name}</h1>
-          <p className="mt-2 text-slate-400">Role: {currentUser.role}</p>
+          <p className="mt-2 text-amber-700">Role: {currentUser.role}</p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
           {currentUser.role === 'customer' && (
-            <div className="rounded-3xl bg-slate-900/90 px-5 py-3 text-sm text-slate-100 border border-slate-800">
+            <div className="rounded-3xl bg-white px-5 py-3 text-sm text-amber-950 border border-amber-200">
               Cart: {cart.length} item{cart.length !== 1 ? 's' : ''}
             </div>
           )}
           <button
             onClick={handleLogout}
-            className="rounded-full bg-slate-800 px-5 py-3 text-sm font-semibold text-slate-100 transition hover:bg-slate-700"
+            className="rounded-full bg-amber-200 px-5 py-3 text-sm font-semibold text-amber-950 transition hover:bg-amber-300"
           >
             Logout
           </button>
         </div>
       </div>
 
-      {message && <div className="mt-6 rounded-3xl border border-cyan-500/30 bg-cyan-500/10 px-5 py-4 text-slate-100">{message}</div>}
+      {message && <div className="mt-6 rounded-3xl border border-amber-200 bg-amber-100 px-5 py-4 text-amber-950">{message}</div>}
 
       {currentUser.role === 'admin' ? (
         <AdminDashboard
@@ -205,28 +205,28 @@ function App() {
 function AdminDashboard({ products, newProduct, setNewProduct, onAddProduct, onUpdateStock, onDeleteProduct }) {
   return (
     <div className="mt-10 grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-      <section className="rounded-3xl border border-slate-800 bg-slate-900/80 p-8 shadow-xl shadow-slate-950/20">
+      <section className="rounded-3xl border border-amber-200 bg-white p-8 shadow-xl shadow-amber-200/40">
         <h2 className="text-2xl font-semibold">Product Management</h2>
-        <p className="mt-3 text-slate-400">Add new products or update stock levels in the store inventory.</p>
+        <p className="mt-3 text-amber-700">Add new products or update stock levels in the store inventory.</p>
 
         <div className="mt-8 space-y-4">
           {products.map((product) => (
-            <div key={product.id} className="rounded-3xl border border-slate-800 bg-slate-950/80 p-5">
+            <div key={product.id} className="rounded-3xl border border-amber-200 bg-amber-50 p-5">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <h3 className="text-xl font-semibold">{product.name}</h3>
-                  <p className="mt-1 text-slate-400">${product.price} • Stock: {product.stock}</p>
-                  <p className="mt-2 text-slate-500">{product.description}</p>
+                  <p className="mt-1 text-amber-700">${product.price} • Stock: {product.stock}</p>
+                  <p className="mt-2 text-amber-600">{product.description}</p>
                 </div>
                 <div className="flex flex-col gap-3 sm:items-end">
-                  <label className="text-sm text-slate-400">
+                  <label className="text-sm text-amber-600">
                     Stock
                     <input
                       type="number"
                       value={product.stock}
                       min="0"
                       onChange={(e) => onUpdateStock(product.id, e.target.value)}
-                      className="mt-2 w-full max-w-[120px] rounded-2xl border border-slate-700 bg-slate-950 px-3 py-2 text-white outline-none"
+                      className="mt-2 w-full max-w-[120px] rounded-2xl border border-amber-200 bg-amber-50 px-3 py-2 text-amber-950 outline-none"
                     />
                   </label>
                   <button
@@ -242,50 +242,50 @@ function AdminDashboard({ products, newProduct, setNewProduct, onAddProduct, onU
         </div>
       </section>
 
-      <section className="rounded-3xl border border-slate-800 bg-slate-900/80 p-8 shadow-xl shadow-slate-950/20">
+      <section className="rounded-3xl border border-amber-200 bg-white p-8 shadow-xl shadow-amber-200/40">
         <h2 className="text-2xl font-semibold">Add Product</h2>
         <div className="mt-6 space-y-4">
-          <label className="block text-sm text-slate-400">
+          <label className="block text-sm text-amber-600">
             Name
             <input
               value={newProduct.name}
               onChange={(e) => setNewProduct((prev) => ({ ...prev, name: e.target.value }))}
-              className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none"
+              className="mt-2 w-full rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-950 outline-none"
               placeholder="Product name"
             />
           </label>
-          <label className="block text-sm text-slate-400">
+          <label className="block text-sm text-amber-600">
             Price
             <input
               type="number"
               value={newProduct.price}
               onChange={(e) => setNewProduct((prev) => ({ ...prev, price: e.target.value }))}
-              className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none"
+              className="mt-2 w-full rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-950 outline-none"
               placeholder="USD"
             />
           </label>
-          <label className="block text-sm text-slate-400">
+          <label className="block text-sm text-amber-600">
             Stock
             <input
               type="number"
               value={newProduct.stock}
               onChange={(e) => setNewProduct((prev) => ({ ...prev, stock: e.target.value }))}
-              className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none"
+              className="mt-2 w-full rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-950 outline-none"
               placeholder="Quantity"
             />
           </label>
-          <label className="block text-sm text-slate-400">
+          <label className="block text-sm text-amber-600">
             Description
             <textarea
               value={newProduct.description}
               onChange={(e) => setNewProduct((prev) => ({ ...prev, description: e.target.value }))}
-              className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none"
+              className="mt-2 w-full rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-950 outline-none"
               rows="4"
             />
           </label>
           <button
             onClick={onAddProduct}
-            className="w-full rounded-full bg-cyan-500 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
+            className="w-full rounded-full bg-amber-500 px-6 py-3 text-sm font-semibold text-amber-950 transition hover:bg-amber-400"
           >
             Add Product
           </button>
@@ -298,22 +298,22 @@ function AdminDashboard({ products, newProduct, setNewProduct, onAddProduct, onU
 function CustomerShop({ products, cart, onAddToCart, onRemoveFromCart, onCheckout, cartTotal }) {
   return (
     <div className="mt-10 grid gap-8 xl:grid-cols-[1.5fr_0.85fr]">
-      <section className="rounded-3xl border border-slate-800 bg-slate-900/80 p-8 shadow-xl shadow-slate-950/20">
+      <section className="rounded-3xl border border-amber-200 bg-white p-8 shadow-xl shadow-amber-200/40">
         <h2 className="text-2xl font-semibold">Shop Products</h2>
-        <p className="mt-3 text-slate-400">Browse available items and add them to your cart.</p>
+        <p className="mt-3 text-amber-700">Browse available items and add them to your cart.</p>
 
         <div className="mt-8 space-y-4">
           {products.map((product) => (
-            <div key={product.id} className="rounded-3xl border border-slate-800 bg-slate-950/80 p-5 sm:flex sm:items-center sm:justify-between">
+            <div key={product.id} className="rounded-3xl border border-amber-200 bg-amber-50 p-5 sm:flex sm:items-center sm:justify-between">
               <div>
                 <h3 className="text-xl font-semibold">{product.name}</h3>
-                <p className="mt-2 text-slate-400">{product.description}</p>
-                <p className="mt-3 text-slate-300">Price: ${product.price} • Stock: {product.stock}</p>
+                <p className="mt-2 text-amber-700">{product.description}</p>
+                <p className="mt-3 text-amber-600">Price: ${product.price} • Stock: {product.stock}</p>
               </div>
               <button
                 onClick={() => onAddToCart(product)}
                 disabled={product.stock <= 0}
-                className="mt-4 rounded-full bg-cyan-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:opacity-50 sm:mt-0"
+                className="mt-4 rounded-full bg-amber-500 px-5 py-3 text-sm font-semibold text-amber-950 transition hover:bg-amber-400 disabled:cursor-not-allowed disabled:opacity-50 sm:mt-0"
               >
                 {product.stock > 0 ? 'Add to Cart' : 'Sold Out'}
               </button>
@@ -322,16 +322,16 @@ function CustomerShop({ products, cart, onAddToCart, onRemoveFromCart, onCheckou
         </div>
       </section>
 
-      <aside className="rounded-3xl border border-slate-800 bg-slate-900/80 p-8 shadow-xl shadow-slate-950/20">
+      <aside className="rounded-3xl border border-amber-200 bg-white p-8 shadow-xl shadow-amber-200/40">
         <h2 className="text-2xl font-semibold">Shopping Cart</h2>
         {cart.length ? (
           <div className="mt-6 space-y-4">
             {cart.map((item) => (
-              <div key={item.id} className="rounded-3xl border border-slate-800 bg-slate-950/80 p-4">
+              <div key={item.id} className="rounded-3xl border border-amber-200 bg-amber-50 p-4">
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <h3 className="text-lg font-semibold">{item.name}</h3>
-                    <p className="mt-1 text-slate-400">Qty: {item.quantity} × ${item.price}</p>
+                    <p className="mt-1 text-amber-700">Qty: {item.quantity} × ${item.price}</p>
                   </div>
                   <button
                     onClick={() => onRemoveFromCart(item.id)}
@@ -342,19 +342,19 @@ function CustomerShop({ products, cart, onAddToCart, onRemoveFromCart, onCheckou
                 </div>
               </div>
             ))}
-            <div className="rounded-3xl bg-slate-950/80 p-4 text-slate-100">
-              <p className="text-sm text-slate-400">Total</p>
+            <div className="rounded-3xl bg-amber-50 p-4 text-amber-950">
+              <p className="text-sm text-amber-700">Total</p>
               <p className="mt-1 text-2xl font-semibold">${cartTotal.toFixed(2)}</p>
             </div>
             <button
               onClick={onCheckout}
-              className="w-full rounded-full bg-cyan-500 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
+              className="w-full rounded-full bg-amber-500 px-6 py-3 text-sm font-semibold text-amber-950 transition hover:bg-amber-400"
             >
               Checkout
             </button>
           </div>
         ) : (
-          <p className="mt-6 text-slate-400">Your cart is empty. Add a product to start shopping.</p>
+          <p className="mt-6 text-amber-700">Your cart is empty. Add a product to start shopping.</p>
         )}
       </aside>
     </div>
