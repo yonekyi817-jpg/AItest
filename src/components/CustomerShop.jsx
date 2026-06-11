@@ -1,4 +1,4 @@
-export default function CustomerShop({ products, cart, onAddToCart, onRemoveFromCart, onCheckout, cartTotal }) {
+export default function CustomerShop({ products, searchQuery, onSearchChange, cart, onAddToCart, onRemoveFromCart, onCheckout, cartTotal }) {
   return (
     <div className="section-grid mt-10">
       <section className="panel-card">
@@ -7,16 +7,27 @@ export default function CustomerShop({ products, cart, onAddToCart, onRemoveFrom
             <h2 className="text-2xl font-semibold">Shop Products</h2>
             <p className="mt-3 text-amber-700">Browse curated items and add them to your cart.</p>
           </div>
+          <label className="input-group mt-6">
+            Search products
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(e) => onSearchChange(e.target.value)}
+              className="input-field"
+              placeholder="Search by name or description"
+            />
+          </label>
         </div>
 
-        <div className="shop-grid mt-8">
-          {products.map((product) => (
-            <article key={product.id} className="product-card product-card-shop">
-              <img
-                src={product.image || 'https://images.unsplash.com/photo-1519337265831-281ec6cc8514?auto=format&fit=crop&w=400&q=80'}
-                alt={product.name}
-                className="product-image"
-              />
+        {products.length ? (
+          <div className="shop-grid mt-8">
+            {products.map((product) => (
+              <article key={product.id} className="product-card product-card-shop">
+                <img
+                  src={product.image || 'https://images.unsplash.com/photo-1519337265831-281ec6cc8514?auto=format&fit=crop&w=400&q=80'}
+                  alt={product.name}
+                  className="product-image"
+                />
               <div className="product-card-inner">
                 <div className="product-header">
                   <div>
@@ -43,7 +54,10 @@ export default function CustomerShop({ products, cart, onAddToCart, onRemoveFrom
               </div>
             </article>
           ))}
-        </div>
+          </div>
+        ) : (
+          <p className="mt-6 text-amber-700">No products match your search. Try a different term.</p>
+        )}
       </section>
 
       <aside className="cart-panel">

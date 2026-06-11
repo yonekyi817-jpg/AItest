@@ -59,6 +59,7 @@ function App() {
     return saved ? JSON.parse(saved) : {}
   })
   const [customerView, setCustomerView] = useState('shop')
+  const [searchQuery, setSearchQuery] = useState('')
   const [message, setMessage] = useState('')
   const [newProduct, setNewProduct] = useState({ name: '', price: '', stock: '', description: '', image: '' })
   const [editingProductId, setEditingProductId] = useState(null)
@@ -92,6 +93,15 @@ function App() {
     () => cart.reduce((sum, item) => sum + item.quantity * item.price, 0),
     [cart]
   )
+
+  const visibleProducts = products.filter((product) => {
+    const query = searchQuery.trim().toLowerCase()
+    if (!query) return true
+    return (
+      product.name.toLowerCase().includes(query) ||
+      product.description.toLowerCase().includes(query)
+    )
+  })
 
   const handleLogin = () => {
     const found = users.find(
@@ -141,6 +151,7 @@ function App() {
     setCurrentUser(null)
     setCart([])
     setCustomerView('shop')
+    setSearchQuery('')
     setMessage('')
   }
 
@@ -377,7 +388,9 @@ function App() {
         />
       ) : (
         <CustomerShop
-          products={products}
+          products={visibleProducts}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
           cart={cart}
           onAddToCart={handleAddToCart}
           onRemoveFromCart={handleRemoveFromCart}
