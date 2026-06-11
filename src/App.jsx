@@ -35,8 +35,8 @@ const initialProducts = [
 ]
 
 const initialUsers = [
-  { email: 'admin@store.com', password: 'admin123', role: 'admin', name: 'Store Admin' },
-  { email: 'user@store.com', password: 'user123', role: 'customer', name: 'Jane Buyer' },
+  { email: 'admin@store.com', password: 'admin123', role: 'admin', name: 'Store Admin', active: true, royal: false },
+  { email: 'user@store.com', password: 'user123', role: 'customer', name: 'Jane Buyer', active: true, royal: false },
 ]
 
 function App() {
@@ -52,7 +52,12 @@ function App() {
   })
   const [users, setUsers] = useState(() => {
     const saved = localStorage.getItem('storeUsers')
-    return saved ? JSON.parse(saved) : initialUsers
+    const list = saved ? JSON.parse(saved) : initialUsers
+    return list.map((user) => ({
+      ...user,
+      active: user.active === undefined ? true : user.active,
+      royal: user.royal === undefined ? false : user.royal,
+    }))
   })
   const [cart, setCart] = useState([])
   const [orderHistory, setOrderHistory] = useState(() => {
@@ -122,6 +127,10 @@ function App() {
       setMessage('Invalid email or password.')
       return
     }
+    if (found.active === false) {
+      setMessage('Account is inactive. Contact admin for help.')
+      return
+    }
     setCurrentUser(found)
     setMessage('')
     setLoginEmail('')
@@ -147,6 +156,8 @@ function App() {
       password: registerPassword,
       role: 'customer',
       name: registerName.trim(),
+      active: true,
+      royal: false,
     }
 
     setUsers((current) => [...current, newUser])
@@ -294,6 +305,42 @@ function App() {
       setCommentText('')
     }
     setMessage('Comment deleted.')
+  }
+
+  const handleToggleRoyalUser = (email) => {
+    setUsers((current) =>
+      current.map((user) =>
+        user.email === email ? { ...user, royal: !user.royal } : user
+      )
+    )
+    setMessage('Royal customer status updated.')
+  }
+
+  const handleToggleActiveUser = (email) => {
+    setUsers((current) =>
+      current.map((user) =>
+        user.email === email ? { ...user, active: !user.active } : user
+      )
+    )
+    setMessage('User account active status updated.')
+  }
+
+  const handleDeleteInactiveUser = (email) => {
+    const target = users.find((user) => user.email === email)
+    if (!target) {
+      setMessage('Unable to find that account.')
+      return
+    }
+    if (target.active) {
+      setMessage('Only inactive accounts can be deleted.')
+      return
+    }
+    if (target.role === 'admin') {
+      setMessage('Admin accounts cannot be deleted here.')
+      return
+    }
+    setUsers((current) => current.filter((user) => user.email !== email))
+    setMessage('Inactive account deleted.')
   }
 
   const handleSaveProduct = () => {
@@ -446,6 +493,8 @@ function App() {
         {currentUser.role === 'admin' ? (
         <AdminDashboard
           products={products}
+          users={users}
+          currentUser={currentUser}
           newProduct={newProduct}
           setNewProduct={setNewProduct}
           editingProductId={editingProductId}
@@ -456,6 +505,9 @@ function App() {
           onUpdateStock={handleUpdateStock}
           onDeleteProduct={handleDeleteProduct}
           comments={comments}
+          onToggleRoyalUser={handleToggleRoyalUser}
+          onToggleActiveUser={handleToggleActiveUser}
+          onDeleteInactiveUser={handleDeleteInactiveUser}
         />
       ) : customerView === 'history' ? (
         <PurchaseHistory

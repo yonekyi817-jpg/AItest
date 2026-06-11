@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react'
 
 export default function AdminDashboard({
   products,
+  users = [],
+  currentUser,
   newProduct,
   setNewProduct,
   editingProductId,
@@ -12,8 +14,12 @@ export default function AdminDashboard({
   onUpdateStock,
   onDeleteProduct,
   comments = [],
+  onToggleRoyalUser,
+  onToggleActiveUser,
+  onDeleteInactiveUser,
 }) {
   const [searchQuery, setSearchQuery] = useState('')
+  const [userQuery, setUserQuery] = useState('')
 
   const visibleProducts = useMemo(() => {
     const query = searchQuery.trim().toLowerCase()
@@ -23,6 +29,15 @@ export default function AdminDashboard({
       product.description.toLowerCase().includes(query)
     )
   }, [products, searchQuery])
+
+  const visibleUsers = useMemo(() => {
+    const query = userQuery.trim().toLowerCase()
+    if (!query) return users
+    return users.filter((user) =>
+      user.name.toLowerCase().includes(query) ||
+      user.email.toLowerCase().includes(query)
+    )
+  }, [users, userQuery])
 
   return (
     <div className="section-grid mt-10">
@@ -119,6 +134,74 @@ export default function AdminDashboard({
             ))
           ) : (
             <p className="text-amber-700">No comments have been submitted yet.</p>
+          )}
+        </div>
+      </section>
+
+      <section className="panel-card">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-semibold">Customer Accounts</h2>
+            <p className="mt-2 text-amber-700">Manage registered users, mark VIP customers, and remove inactive accounts.</p>
+          </div>
+          <span className="rounded-full bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-700">
+            {users.length} user{users.length !== 1 ? 's' : ''}
+          </span>
+        </div>
+
+        <div className="mt-6">
+          <label className="input-group">
+            Search accounts
+            <input
+              type="search"
+              value={userQuery}
+              onChange={(e) => setUserQuery(e.target.value)}
+              className="input-field"
+              placeholder="Search by name or email"
+            />
+          </label>
+        </div>
+
+        <div className="mt-8 admin-products-scroll space-y-4">
+          {visibleUsers.length ? visibleUsers.map((user) => (
+            <div key={user.email} className="product-card">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between w-full">
+                <div>
+                  <h3 className="text-xl font-semibold">
+                    {user.name}{' '}
+                    {user.royal && <span className="text-amber-500">★ Royal VIP</span>}
+                  </h3>
+                  <p className="mt-1 text-amber-700">{user.email}</p>
+                  <p className="mt-1 text-amber-600">Role: {user.role} • Status: {user.active ? 'Active' : 'Inactive'}</p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {user.role !== 'admin' && (
+                    <button
+                      onClick={() => onToggleRoyalUser(user.email)}
+                      className="button-secondary px-3 py-2 text-sm"
+                    >
+                      {user.royal ? 'Remove VIP' : 'Mark VIP'}
+                    </button>
+                  )}
+                  <button
+                    onClick={() => onToggleActiveUser(user.email)}
+                    className="button-secondary px-3 py-2 text-sm"
+                    disabled={user.email === currentUser?.email && currentUser.role === 'admin'}
+                  >
+                    {user.active ? 'Deactivate' : 'Activate'}
+                  </button>
+                  <button
+                    onClick={() => onDeleteInactiveUser(user.email)}
+                    className="button-danger px-3 py-2 text-sm"
+                    disabled={user.active || user.role === 'admin' || user.email === currentUser?.email}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          )) : (
+            <p className="mt-4 text-amber-700">No users match your search.</p>
           )}
         </div>
       </section>
