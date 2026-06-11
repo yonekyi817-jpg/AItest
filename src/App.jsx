@@ -66,6 +66,7 @@ function App() {
     return saved ? JSON.parse(saved) : []
   })
   const [commentText, setCommentText] = useState('')
+  const [commentEditId, setCommentEditId] = useState(null)
   const [message, setMessage] = useState('')
   const [newProduct, setNewProduct] = useState({ name: '', price: '', stock: '', description: '', image: '' })
   const [editingProductId, setEditingProductId] = useState(null)
@@ -163,6 +164,7 @@ function App() {
     setCustomerView('shop')
     setSearchQuery('')
     setCommentText('')
+    setCommentEditId(null)
     setMessage('')
   }
 
@@ -246,21 +248,51 @@ function App() {
       return
     }
 
-    const newComment = {
-      id: Date.now(),
-      user: currentUser.name,
-      userEmail: currentUser.email,
-      text: trimmed,
-      date: new Date().toISOString(),
+    if (commentEditId) {
+      setComments((current) =>
+        current.map((comment) =>
+          comment.id === commentEditId ? { ...comment, text: trimmed, date: new Date().toISOString() } : comment
+        )
+      )
+      setMessage('Comment updated successfully.')
+      setCommentEditId(null)
+    } else {
+      const newComment = {
+        id: Date.now(),
+        user: currentUser.name,
+        userEmail: currentUser.email,
+        text: trimmed,
+        date: new Date().toISOString(),
+      }
+
+      setComments((current) => [newComment, ...current])
+      setMessage('Comment posted successfully.')
     }
 
-    setComments((current) => [newComment, ...current])
     setCommentText('')
-    setMessage('Comment posted successfully.')
+  }
+
+  const handleEditComment = (commentId) => {
+    if (!commentId) {
+      setCommentEditId(null)
+      setCommentText('')
+      setMessage('Comment edit cancelled.')
+      return
+    }
+
+    const comment = comments.find((item) => item.id === commentId)
+    if (!comment) return
+    setCommentText(comment.text)
+    setCommentEditId(commentId)
+    setMessage('Editing your comment. Save changes when ready.')
   }
 
   const handleDeleteComment = (commentId) => {
     setComments((current) => current.filter((comment) => comment.id !== commentId))
+    if (commentEditId === commentId) {
+      setCommentEditId(null)
+      setCommentText('')
+    }
     setMessage('Comment deleted.')
   }
 
@@ -437,6 +469,8 @@ function App() {
           onAddComment={handleAddComment}
           currentUser={currentUser}
           onDeleteComment={handleDeleteComment}
+          commentEditId={commentEditId}
+          onEditComment={handleEditComment}
         />
       ) : (
         <CustomerShop

@@ -1,4 +1,4 @@
-export default function ContactPage({ comments, commentText, onCommentChange, onAddComment, currentUser, onDeleteComment }) {
+export default function ContactPage({ comments, commentText, onCommentChange, onAddComment, currentUser, onDeleteComment, commentEditId, onEditComment }) {
   return (
     <div className="section-grid mt-10">
       <section className="panel-card">
@@ -32,7 +32,7 @@ export default function ContactPage({ comments, commentText, onCommentChange, on
         </div>
 
         <div className="comment-panel mt-8">
-          <h3 className="text-xl font-semibold">Leave a comment</h3>
+          <h3 className="text-xl font-semibold">{commentEditId ? 'Edit your comment' : 'Leave a comment'}</h3>
           <textarea
             value={commentText}
             onChange={(e) => onCommentChange(e.target.value)}
@@ -40,9 +40,22 @@ export default function ContactPage({ comments, commentText, onCommentChange, on
             rows="5"
             placeholder="Write your feedback or question here..."
           />
-          <button onClick={onAddComment} className="button-primary mt-4 w-full max-w-[220px]">
-            Submit Comment
-          </button>
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <button onClick={onAddComment} className="button-primary w-full max-w-[220px]">
+              {commentEditId ? 'Save Comment' : 'Submit Comment'}
+            </button>
+            {commentEditId && (
+              <button
+                onClick={() => {
+                  onCommentChange('')
+                  onEditComment(null)
+                }}
+                className="button-secondary w-full max-w-[220px]"
+              >
+                Cancel Edit
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="comment-list mt-8">
@@ -57,12 +70,20 @@ export default function ContactPage({ comments, commentText, onCommentChange, on
                       <p className="text-sm text-amber-700">{new Date(comment.date).toLocaleString()}</p>
                     </div>
                     {(comment.userEmail ? currentUser.email === comment.userEmail : currentUser.name === comment.user) && (
-                      <button
-                        onClick={() => onDeleteComment(comment.id)}
-                        className="button-danger px-3 py-2 text-sm"
-                      >
-                        Delete
-                      </button>
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          onClick={() => onEditComment(comment.id)}
+                          className="button-secondary px-3 py-2 text-sm"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => onDeleteComment(comment.id)}
+                          className="button-danger px-3 py-2 text-sm"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     )}
                   </div>
                   <p className="mt-3 text-amber-950">{comment.text}</p>
