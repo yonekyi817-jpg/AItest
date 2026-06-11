@@ -417,6 +417,7 @@ function App() {
           onCancelEdit={handleCancelEdit}
           onUpdateStock={handleUpdateStock}
           onDeleteProduct={handleDeleteProduct}
+          comments={comments}
         />
       ) : customerView === 'history' ? (
         <PurchaseHistory

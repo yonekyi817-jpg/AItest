@@ -9,6 +9,7 @@ export default function AdminDashboard({
   onCancelEdit,
   onUpdateStock,
   onDeleteProduct,
+  comments = [],
 }) {
   return (
     <div className="section-grid mt-10">
@@ -61,6 +62,36 @@ export default function AdminDashboard({
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="panel-card">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-semibold">Customer Comments</h2>
+            <p className="mt-2 text-amber-700">Review feedback from all registered users.</p>
+          </div>
+          <span className="rounded-full bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-700">
+            {comments.length} comment{comments.length !== 1 ? 's' : ''}
+          </span>
+        </div>
+
+        <div className="mt-6 space-y-4">
+          {comments.length ? (
+            comments.map((comment) => (
+              <div key={comment.id} className="comment-card">
+                <div className="comment-header">
+                  <div>
+                    <h3 className="font-semibold">{comment.user}</h3>
+                    <p className="text-sm text-amber-700">{new Date(comment.date).toLocaleString()}</p>
+                  </div>
+                </div>
+                <p className="mt-3 text-amber-950">{comment.text}</p>
+              </div>
+            ))
+          ) : (
+            <p className="text-amber-700">No comments have been submitted yet.</p>
+          )}
         </div>
       </section>
 
