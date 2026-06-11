@@ -3,6 +3,7 @@ import Navbar from './components/Navbar'
 import AuthPanel from './components/AuthPanel'
 import AdminDashboard from './components/AdminDashboard'
 import CustomerShop from './components/CustomerShop'
+import PurchaseHistory from './components/PurchaseHistory'
 import './components/AppStyles.css'
 
 const initialProducts = [
@@ -53,6 +54,11 @@ function App() {
     return saved ? JSON.parse(saved) : initialUsers
   })
   const [cart, setCart] = useState([])
+  const [orderHistory, setOrderHistory] = useState(() => {
+    const saved = localStorage.getItem('storeOrderHistory')
+    return saved ? JSON.parse(saved) : {}
+  })
+  const [customerView, setCustomerView] = useState('shop')
   const [message, setMessage] = useState('')
   const [newProduct, setNewProduct] = useState({ name: '', price: '', stock: '', description: '', image: '' })
   const [editingProductId, setEditingProductId] = useState(null)
@@ -77,6 +83,10 @@ function App() {
       localStorage.removeItem('storeCurrentUser')
     }
   }, [currentUser])
+
+  useEffect(() => {
+    localStorage.setItem('storeOrderHistory', JSON.stringify(orderHistory))
+  }, [orderHistory])
 
   const cartTotal = useMemo(
     () => cart.reduce((sum, item) => sum + item.quantity * item.price, 0),
@@ -130,6 +140,7 @@ function App() {
   const handleLogout = () => {
     setCurrentUser(null)
     setCart([])
+    setCustomerView('shop')
     setMessage('')
   }
 
@@ -174,7 +185,28 @@ function App() {
       setMessage('Your cart is empty.')
       return
     }
-    setMessage(`Order placed! Total: $${cartTotal.toFixed(2)}.`)
+
+    const order = {
+      id: Date.now(),
+      date: new Date().toISOString(),
+      items: cart.map((item) => ({
+        id: item.id,
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+      })),
+      total: cartTotal,
+    }
+
+    setOrderHistory((currentHistory) => {
+      const userOrders = currentHistory[currentUser.email] || []
+      return {
+        ...currentHistory,
+        [currentUser.email]: [order, ...userOrders],
+      }
+    })
+
+    setMessage(`Order placed! Total: $${cartTotal.toFixed(2)}. Your purchase now appears in order history.`)
     setProducts((currentProducts) =>
       currentProducts.map((product) => {
         const cartItem = cart.find((item) => item.id === product.id)
@@ -297,9 +329,23 @@ function App() {
           </div>
           <div className="flex flex-wrap items-center gap-3">
             {currentUser.role === 'customer' && (
-              <div className="rounded-3xl bg-white px-5 py-3 text-sm text-amber-950 border border-amber-200">
-                Cart: {cart.length} item{cart.length !== 1 ? 's' : ''}
-              </div>
+              <>
+                <button
+                  onClick={() => setCustomerView('shop')}
+                  className={`button-secondary ${customerView === 'shop' ? 'active' : ''}`}
+                >
+                  Shop
+                </button>
+                <button
+                  onClick={() => setCustomerView('history')}
+                  className={`button-secondary ${customerView === 'history' ? 'active' : ''}`}
+                >
+                  Purchase History
+                </button>
+                <div className="rounded-3xl bg-white px-5 py-3 text-sm text-amber-950 border border-amber-200">
+                  Cart: {cart.length} item{cart.length !== 1 ? 's' : ''}
+                </div>
+              </>
             )}
             <button
               onClick={handleLogout}
@@ -324,6 +370,10 @@ function App() {
           onCancelEdit={handleCancelEdit}
           onUpdateStock={handleUpdateStock}
           onDeleteProduct={handleDeleteProduct}
+        />
+      ) : customerView === 'history' ? (
+        <PurchaseHistory
+          orders={orderHistory[currentUser.email] || []}
         />
       ) : (
         <CustomerShop

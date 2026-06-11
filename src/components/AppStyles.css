@@ -362,3 +362,47 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+.button-secondary.active {
+  background: #fbbf24;
+  color: #0f172a;
+}
+
+.history-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.order-card {
+  border: 1px solid var(--border);
+  border-radius: 1.75rem;
+  background: var(--surface);
+  padding: 1.75rem;
+}
+
+.order-card-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+}
+
+.order-meta {
+  margin-top: 0.5rem;
+  color: var(--muted);
+}
+
+.order-items {
+  margin-top: 1.5rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+}
