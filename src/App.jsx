@@ -249,6 +249,7 @@ function App() {
     const newComment = {
       id: Date.now(),
       user: currentUser.name,
+      userEmail: currentUser.email,
       text: trimmed,
       date: new Date().toISOString(),
     }
@@ -256,6 +257,11 @@ function App() {
     setComments((current) => [newComment, ...current])
     setCommentText('')
     setMessage('Comment posted successfully.')
+  }
+
+  const handleDeleteComment = (commentId) => {
+    setComments((current) => current.filter((comment) => comment.id !== commentId))
+    setMessage('Comment deleted.')
   }
 
   const handleSaveProduct = () => {
@@ -429,6 +435,8 @@ function App() {
           commentText={commentText}
           onCommentChange={setCommentText}
           onAddComment={handleAddComment}
+          currentUser={currentUser}
+          onDeleteComment={handleDeleteComment}
         />
       ) : (
         <CustomerShop

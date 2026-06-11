@@ -1,4 +1,4 @@
-export default function ContactPage({ comments, commentText, onCommentChange, onAddComment }) {
+export default function ContactPage({ comments, commentText, onCommentChange, onAddComment, currentUser, onDeleteComment }) {
   return (
     <div className="section-grid mt-10">
       <section className="panel-card">
@@ -52,8 +52,18 @@ export default function ContactPage({ comments, commentText, onCommentChange, on
               {comments.map((comment) => (
                 <article key={comment.id} className="comment-card">
                   <div className="comment-header">
-                    <p className="font-semibold">{comment.user}</p>
-                    <p className="text-sm text-amber-700">{new Date(comment.date).toLocaleString()}</p>
+                    <div>
+                      <p className="font-semibold">{comment.user}</p>
+                      <p className="text-sm text-amber-700">{new Date(comment.date).toLocaleString()}</p>
+                    </div>
+                    {(comment.userEmail ? currentUser.email === comment.userEmail : currentUser.name === comment.user) && (
+                      <button
+                        onClick={() => onDeleteComment(comment.id)}
+                        className="button-danger px-3 py-2 text-sm"
+                      >
+                        Delete
+                      </button>
+                    )}
                   </div>
                   <p className="mt-3 text-amber-950">{comment.text}</p>
                 </article>
