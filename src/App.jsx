@@ -379,46 +379,23 @@ function App() {
     <>
       <Navbar currentUser={currentUser} onLogout={handleLogout} />
       <div className="app-shell site-wrap">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="uppercase tracking-[0.4em] text-sm text-amber-600">E-Commerce Store</p>
-            <h1 className="mt-3 text-3xl sm:text-4xl font-semibold">Welcome, {currentUser.name}</h1>
-            <p className="mt-2 text-amber-700">Role: {currentUser.role}</p>
+        {currentUser.role === 'admin' && (
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="uppercase tracking-[0.4em] text-sm text-amber-600">E-Commerce Store</p>
+              <h1 className="mt-3 text-3xl sm:text-4xl font-semibold">Welcome, {currentUser.name}</h1>
+              <p className="mt-2 text-amber-700">Role: {currentUser.role}</p>
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                onClick={handleLogout}
+                className="button-secondary"
+              >
+                Logout
+              </button>
+            </div>
           </div>
-          <div className="flex flex-wrap items-center gap-3">
-            {currentUser.role === 'customer' && (
-              <>
-                <button
-                  onClick={() => setCustomerView('shop')}
-                  className={`button-secondary ${customerView === 'shop' ? 'active' : ''}`}
-                >
-                  Shop
-                </button>
-                <button
-                  onClick={() => setCustomerView('history')}
-                  className={`button-secondary ${customerView === 'history' ? 'active' : ''}`}
-                >
-                  Purchase History
-                </button>
-                <button
-                  onClick={() => setCustomerView('contact')}
-                  className={`button-secondary ${customerView === 'contact' ? 'active' : ''}`}
-                >
-                  Contact
-                </button>
-                <div className="rounded-3xl bg-white px-5 py-3 text-sm text-amber-950 border border-amber-200">
-                  Cart: {cart.length} item{cart.length !== 1 ? 's' : ''}
-                </div>
-              </>
-            )}
-            <button
-              onClick={handleLogout}
-              className="button-secondary"
-            >
-              Logout
-            </button>
-          </div>
-        </div>
+        )}
 
         {message && <div className="mt-6 rounded-3xl border border-amber-200 bg-amber-100 px-5 py-4 text-amber-950">{message}</div>}
 
