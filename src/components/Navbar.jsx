@@ -17,12 +17,7 @@ export default function Navbar({ currentUser, onLogout }) {
             </button>
           </div>
         </div>
-
-        <div className="navbar-contact flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between rounded-3xl border border-white/20 bg-white/10 px-4 py-3 text-sm text-sky-100">
-          <span>Email: <a href="mailto:support@honeysmarket.com" className="contact-link">support@honeysmarket.com</a></span>
-          <span>Phone: <a href="tel:+18001234567" className="contact-link">+1 (800) 123-4567</a></span>
-          <span>Telegram: <a href="https://t.me/Mgwe_Drix" target="_blank" rel="noreferrer" className="contact-link">@Mgwe_Drix</a></span>
-        </div>
+      </div>
       </div>
     </header>
   )
