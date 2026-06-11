@@ -363,6 +363,19 @@ body {
   }
 }
 
+.navbar-contact {
+  color: rgba(248, 250, 252, 0.9);
+}
+
+.contact-link {
+  color: #f8fafc;
+  text-decoration: underline;
+}
+
+.contact-link:hover {
+  color: #e2e8f0;
+}
+
 .button-secondary.active {
   background: #fbbf24;
   color: #0f172a;
