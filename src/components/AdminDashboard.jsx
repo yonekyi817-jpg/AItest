@@ -1,3 +1,5 @@
+import { useMemo, useState } from 'react'
+
 export default function AdminDashboard({
   products,
   newProduct,
@@ -11,14 +13,38 @@ export default function AdminDashboard({
   onDeleteProduct,
   comments = [],
 }) {
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const visibleProducts = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase()
+    if (!query) return products
+    return products.filter((product) =>
+      product.name.toLowerCase().includes(query) ||
+      product.description.toLowerCase().includes(query)
+    )
+  }, [products, searchQuery])
+
   return (
     <div className="section-grid mt-10">
       <section className="panel-card">
         <h2 className="text-2xl font-semibold">Product Management</h2>
         <p className="mt-3 text-amber-700">Add new products or update stock levels in the store inventory.</p>
 
-        <div className="mt-8 space-y-4">
-          {products.map((product) => (
+        <div className="mt-6">
+          <label className="input-group">
+            Search products
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="input-field"
+              placeholder="Search by name or description"
+            />
+          </label>
+        </div>
+
+        <div className="mt-8 admin-products-scroll space-y-4">
+          {visibleProducts.length ? visibleProducts.map((product) => (
             <div key={product.id} className="product-card">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between w-full">
                 <div className="flex items-start gap-4">
@@ -61,7 +87,9 @@ export default function AdminDashboard({
                 </div>
               </div>
             </div>
-          ))}
+          )) : (
+            <p className="mt-4 text-amber-700">No products match your search.</p>
+          )}
         </div>
       </section>
 
