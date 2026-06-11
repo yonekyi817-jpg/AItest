@@ -154,6 +154,7 @@ export default function AuthPanel({
             {message && <p className="text-sm text-rose-600">{message}</p>}
           </div>
         </section>
+
       </main>
     </div>
   )

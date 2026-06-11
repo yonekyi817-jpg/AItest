@@ -363,47 +363,8 @@ body {
   }
 }
 
-.navbar-contact {
-  color: rgba(248, 250, 252, 0.9);
-}
-
-.contact-link {
-  color: #f8fafc;
-  text-decoration: underline;
-}
-
-.contact-link:hover {
-  color: #e2e8f0;
-}
-
-.auth-contact {
-  background: rgba(255, 251, 235, 0.85);
-}
-
-.shop-contact {
-  background: rgba(255, 251, 235, 0.95);
-}
-
-.fixed-shop-contact {
-  position: fixed;
-  left: 50%;
-  bottom: 0;
-  transform: translateX(-50%);
-  width: min(100%, 1180px);
-  margin: 0 auto;
-  z-index: 50;
-  box-shadow: 0 -20px 40px rgba(15, 23, 42, 0.12);
-}
-
 .app-shell {
   background: var(--bg);
-  padding-bottom: 12rem;
-}
-
-@media (min-width: 768px) {
-  .shop-contact {
-    padding: 2rem 2.25rem;
-  }
 }
 
 .button-secondary.active {

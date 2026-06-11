@@ -96,14 +96,6 @@ export default function CustomerShop({ products, searchQuery, onSearchChange, ca
         )}
       </aside>
 
-      <div className="shop-contact fixed-shop-contact rounded-3xl border border-amber-200 bg-amber-50 px-6 py-5 text-sm text-amber-950">
-        <p className="font-semibold text-amber-900">Need help?</p>
-        <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <span>Email: <a href="mailto:support@honeysmarket.com" className="contact-link">support@honeysmarket.com</a></span>
-          <span>Phone: <a href="tel:+18001234567" className="contact-link">+1 (800) 123-4567</a></span>
-          <span>Telegram: <a href="https://t.me/Mgwe_Drix" target="_blank" rel="noreferrer" className="contact-link">@Mgwe_Drix</a></span>
-        </div>
-      </div>
     </div>
   )
 }
