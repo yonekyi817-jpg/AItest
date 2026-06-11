@@ -2,42 +2,10 @@ import { useEffect, useMemo, useState } from 'react'
 import Navbar from './components/Navbar'
 import AuthPanel from './components/AuthPanel'
 import AdminDashboard from './components/AdminDashboard'
-import CustomerShop from './components/CustomerShop'
-import PurchaseHistory from './components/PurchaseHistory'
-import ContactPage from './components/ContactPage'
+import CustomerPanel from './components/CustomerPanel'
+import useLocalStorageState from './hooks/useLocalStorageState'
+import { initialProducts, initialUsers } from './data/initialStoreData'
 import './components/AppStyles.css'
-
-const initialProducts = [
-  {
-    id: 1,
-    name: 'Smart Watch',
-    price: 79,
-    stock: 12,
-    description: 'Track activity and health with a sharp modern display.',
-    image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=700&q=80',
-  },
-  {
-    id: 2,
-    name: 'Wireless Earbuds',
-    price: 59,
-    stock: 20,
-    description: 'Comfortable fit with crystal-clear sound and long battery life.',
-    image: 'https://images.unsplash.com/photo-1512314889357-e157c22f938d?auto=format&fit=crop&w=700&q=80',
-  },
-  {
-    id: 3,
-    name: 'Laptop Sleeve',
-    price: 24,
-    stock: 18,
-    description: 'Protect your device with a durable, slim sleeve.',
-    image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=700&q=80',
-  },
-]
-
-const initialUsers = [
-  { email: 'admin@store.com', password: 'admin123', role: 'admin', name: 'Store Admin', active: true, royal: false },
-  { email: 'user@store.com', password: 'user123', role: 'customer', name: 'Jane Buyer', active: true, royal: false },
-]
 
 function App() {
   const [currentUser, setCurrentUser] = useState(() => {
@@ -46,30 +14,19 @@ function App() {
   })
   const [loginEmail, setLoginEmail] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
-  const [products, setProducts] = useState(() => {
-    const saved = localStorage.getItem('storeProducts')
-    return saved ? JSON.parse(saved) : initialProducts
-  })
-  const [users, setUsers] = useState(() => {
-    const saved = localStorage.getItem('storeUsers')
-    const list = saved ? JSON.parse(saved) : initialUsers
-    return list.map((user) => ({
+  const [products, setProducts] = useLocalStorageState('storeProducts', initialProducts)
+  const [users, setUsers] = useLocalStorageState('storeUsers', () =>
+    initialUsers.map((user) => ({
       ...user,
       active: user.active === undefined ? true : user.active,
       royal: user.royal === undefined ? false : user.royal,
     }))
-  })
+  )
   const [cart, setCart] = useState([])
-  const [orderHistory, setOrderHistory] = useState(() => {
-    const saved = localStorage.getItem('storeOrderHistory')
-    return saved ? JSON.parse(saved) : {}
-  })
+  const [orderHistory, setOrderHistory] = useLocalStorageState('storeOrderHistory', {})
   const [customerView, setCustomerView] = useState('shop')
   const [searchQuery, setSearchQuery] = useState('')
-  const [comments, setComments] = useState(() => {
-    const saved = localStorage.getItem('storeComments')
-    return saved ? JSON.parse(saved) : []
-  })
+  const [comments, setComments] = useLocalStorageState('storeComments', [])
   const [commentText, setCommentText] = useState('')
   const [commentEditId, setCommentEditId] = useState(null)
   const [message, setMessage] = useState('')
@@ -82,28 +39,12 @@ function App() {
   const [registerConfirm, setRegisterConfirm] = useState('')
 
   useEffect(() => {
-    localStorage.setItem('storeProducts', JSON.stringify(products))
-  }, [products])
-
-  useEffect(() => {
-    localStorage.setItem('storeUsers', JSON.stringify(users))
-  }, [users])
-
-  useEffect(() => {
     if (currentUser) {
       localStorage.setItem('storeCurrentUser', JSON.stringify(currentUser))
     } else {
       localStorage.removeItem('storeCurrentUser')
     }
   }, [currentUser])
-
-  useEffect(() => {
-    localStorage.setItem('storeOrderHistory', JSON.stringify(orderHistory))
-  }, [orderHistory])
-
-  useEffect(() => {
-    localStorage.setItem('storeComments', JSON.stringify(comments))
-  }, [comments])
 
   const cartTotal = useMemo(
     () => cart.reduce((sum, item) => sum + item.quantity * item.price, 0),
@@ -316,15 +257,6 @@ function App() {
     setMessage('Royal customer status updated.')
   }
 
-  const handleToggleActiveUser = (email) => {
-    setUsers((current) =>
-      current.map((user) =>
-        user.email === email ? { ...user, active: !user.active } : user
-      )
-    )
-    setMessage('User account active status updated.')
-  }
-
   const handleDeleteUser = (email) => {
     const target = users.find((user) => user.email === email)
     if (!target) {
@@ -491,51 +423,46 @@ function App() {
         {message && <div className="mt-6 rounded-3xl border border-amber-200 bg-amber-100 px-5 py-4 text-amber-950">{message}</div>}
 
         {currentUser.role === 'admin' ? (
-        <AdminDashboard
-          products={products}
-          users={users}
-          currentUser={currentUser}
-          newProduct={newProduct}
-          setNewProduct={setNewProduct}
-          editingProductId={editingProductId}
-          onImageFileChange={handleImageFileChange}
-          onSaveProduct={handleSaveProduct}
-          onEditProduct={handleEditProduct}
-          onCancelEdit={handleCancelEdit}
-          onUpdateStock={handleUpdateStock}
-          onDeleteProduct={handleDeleteProduct}
-          comments={comments}
-          onToggleRoyalUser={handleToggleRoyalUser}
-          onToggleActiveUser={handleToggleActiveUser}
-          onDeleteUser={handleDeleteUser}
-        />
-      ) : customerView === 'history' ? (
-        <PurchaseHistory
-          orders={orderHistory[currentUser.email] || []}
-        />
-      ) : customerView === 'contact' ? (
-        <ContactPage
-          comments={comments}
-          commentText={commentText}
-          onCommentChange={setCommentText}
-          onAddComment={handleAddComment}
-          currentUser={currentUser}
-          onDeleteComment={handleDeleteComment}
-          commentEditId={commentEditId}
-          onEditComment={handleEditComment}
-        />
-      ) : (
-        <CustomerShop
-          products={visibleProducts}
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          cart={cart}
-          onAddToCart={handleAddToCart}
-          onRemoveFromCart={handleRemoveFromCart}
-          onCheckout={handleCheckout}
-          cartTotal={cartTotal}
-        />
-      )}
+          <AdminDashboard
+            products={products}
+            users={users}
+            currentUser={currentUser}
+            newProduct={newProduct}
+            setNewProduct={setNewProduct}
+            editingProductId={editingProductId}
+            onImageFileChange={handleImageFileChange}
+            onSaveProduct={handleSaveProduct}
+            onEditProduct={handleEditProduct}
+            onCancelEdit={handleCancelEdit}
+            onUpdateStock={handleUpdateStock}
+            onDeleteProduct={handleDeleteProduct}
+            comments={comments}
+            onToggleRoyalUser={handleToggleRoyalUser}
+            onDeleteUser={handleDeleteUser}
+          />
+        ) : (
+          <CustomerPanel
+            currentUser={currentUser}
+            customerView={customerView}
+            setCustomerView={setCustomerView}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            visibleProducts={visibleProducts}
+            cart={cart}
+            onAddToCart={handleAddToCart}
+            onRemoveFromCart={handleRemoveFromCart}
+            onCheckout={handleCheckout}
+            cartTotal={cartTotal}
+            orders={orderHistory[currentUser.email] || []}
+            comments={comments}
+            commentText={commentText}
+            onCommentChange={setCommentText}
+            onAddComment={handleAddComment}
+            onDeleteComment={handleDeleteComment}
+            commentEditId={commentEditId}
+            onEditComment={handleEditComment}
+          />
+        )}
     </div>
     </>
   )

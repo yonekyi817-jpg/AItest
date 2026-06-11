@@ -15,7 +15,6 @@ export default function AdminDashboard({
   onDeleteProduct,
   comments = [],
   onToggleRoyalUser,
-  onToggleActiveUser,
   onDeleteUser,
 }) {
   const [searchQuery, setSearchQuery] = useState('')
@@ -108,104 +107,6 @@ export default function AdminDashboard({
         </div>
       </section>
 
-      <section className="panel-card">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-semibold">Customer Comments</h2>
-            <p className="mt-2 text-amber-700">Review feedback from all registered users.</p>
-          </div>
-          <span className="rounded-full bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-700">
-            {comments.length} comment{comments.length !== 1 ? 's' : ''}
-          </span>
-        </div>
-
-        <div className="mt-6 space-y-4">
-          {comments.length ? (
-            comments.map((comment) => (
-              <div key={comment.id} className="comment-card">
-                <div className="comment-header">
-                  <div>
-                    <h3 className="font-semibold">{comment.user}</h3>
-                    <p className="text-sm text-amber-700">{new Date(comment.date).toLocaleString()}</p>
-                  </div>
-                </div>
-                <p className="mt-3 text-amber-950">{comment.text}</p>
-              </div>
-            ))
-          ) : (
-            <p className="text-amber-700">No comments have been submitted yet.</p>
-          )}
-        </div>
-      </section>
-
-      <section className="panel-card">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-semibold">Customer Accounts</h2>
-            <p className="mt-2 text-amber-700">Manage registered users, mark VIP customers, and remove customer accounts as needed.</p>
-          </div>
-          <span className="rounded-full bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-700">
-            {users.length} user{users.length !== 1 ? 's' : ''}
-          </span>
-        </div>
-
-        <div className="mt-6">
-          <label className="input-group">
-            Search accounts
-            <input
-              type="search"
-              value={userQuery}
-              onChange={(e) => setUserQuery(e.target.value)}
-              className="input-field"
-              placeholder="Search by name or email"
-            />
-          </label>
-        </div>
-
-        <div className="mt-8 admin-products-scroll space-y-4">
-          {visibleUsers.length ? visibleUsers.map((user) => (
-            <div key={user.email} className="product-card">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between w-full">
-                <div>
-                  <h3 className="text-xl font-semibold">
-                    {user.name}{' '}
-                    {user.royal && <span className="text-amber-500">★ Royal VIP</span>}
-                  </h3>
-                  <p className="mt-1 text-amber-700">{user.email}</p>
-                  <p className="mt-1 text-amber-600">Role: {user.role} • Status: {user.active ? 'Active' : 'Inactive'}</p>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {user.role !== 'admin' && (
-                    <button
-                      onClick={() => onToggleRoyalUser(user.email)}
-                      className="button-secondary px-3 py-2 text-sm"
-                    >
-                      {user.royal ? 'Remove VIP' : 'Mark VIP'}
-                    </button>
-                  )}
-                  <button
-                    onClick={() => onToggleActiveUser(user.email)}
-                    className="button-secondary px-3 py-2 text-sm"
-                    disabled={user.email === currentUser?.email && currentUser.role === 'admin'}
-                  >
-                    {user.active ? 'Deactivate' : 'Activate'}
-                  </button>
-                  <button
-                    onClick={() => onDeleteUser(user.email)}
-                    className="button-danger px-3 py-2 text-sm"
-                    disabled={user.role === 'admin' || user.email === currentUser?.email}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </div>
-          )) : (
-            <p className="mt-4 text-amber-700">No users match your search.</p>
-          )}
-        </div>
-      </section>
-
       <section className="panel-card-secondary">
         <div className="flex items-center justify-between gap-4">
           <div>
@@ -282,6 +183,97 @@ export default function AdminDashboard({
           >
             {editingProductId ? 'Save Product' : 'Add Product'}
           </button>
+        </div>
+      </section>
+
+      <section className="panel-card">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-semibold">Customer Accounts</h2>
+            <p className="mt-2 text-amber-700">Manage registered users, mark VIP customers, and remove customer accounts as needed.</p>
+          </div>
+          <span className="rounded-full bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-700">
+            {users.length} user{users.length !== 1 ? 's' : ''}
+          </span>
+        </div>
+
+        <div className="mt-6">
+          <label className="input-group">
+            Search accounts
+            <input
+              type="search"
+              value={userQuery}
+              onChange={(e) => setUserQuery(e.target.value)}
+              className="input-field"
+              placeholder="Search by name or email"
+            />
+          </label>
+        </div>
+
+        <div className="mt-8 admin-products-scroll space-y-4">
+          {visibleUsers.length ? visibleUsers.map((user) => (
+            <div key={user.email} className="product-card">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between w-full">
+                <div>
+                  <h3 className="text-xl font-semibold">
+                    {user.name}{' '}
+                    {user.royal && <span className="text-amber-500">★ Royal VIP</span>}
+                  </h3>
+                  <p className="mt-1 text-amber-700">{user.email}</p>
+                  <p className="mt-1 text-amber-600">Role: {user.role} • Status: {user.active ? 'Active' : 'Inactive'}</p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {user.role !== 'admin' && (
+                    <button
+                      onClick={() => onToggleRoyalUser(user.email)}
+                      className="button-secondary px-3 py-2 text-sm"
+                    >
+                      {user.royal ? 'Remove VIP' : 'Mark VIP'}
+                    </button>
+                  )}
+                  <button
+                    onClick={() => onDeleteUser(user.email)}
+                    className="button-danger px-3 py-2 text-sm"
+                    disabled={user.role === 'admin' || user.email === currentUser?.email}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          )) : (
+            <p className="mt-4 text-amber-700">No users match your search.</p>
+          )}
+        </div>
+      </section>
+
+      <section className="panel-card">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-semibold">Customer Comments</h2>
+            <p className="mt-2 text-amber-700">Review feedback from all registered users.</p>
+          </div>
+          <span className="rounded-full bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-700">
+            {comments.length} comment{comments.length !== 1 ? 's' : ''}
+          </span>
+        </div>
+
+        <div className="mt-6 space-y-4">
+          {comments.length ? (
+            comments.map((comment) => (
+              <div key={comment.id} className="comment-card">
+                <div className="comment-header">
+                  <div>
+                    <h3 className="font-semibold">{comment.user}</h3>
+                    <p className="text-sm text-amber-700">{new Date(comment.date).toLocaleString()}</p>
+                  </div>
+                </div>
+                <p className="mt-3 text-amber-950">{comment.text}</p>
+              </div>
+            ))
+          ) : (
+            <p className="text-amber-700">No comments have been submitted yet.</p>
+          )}
         </div>
       </section>
     </div>
