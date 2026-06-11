@@ -4,6 +4,7 @@ import AuthPanel from './components/AuthPanel'
 import AdminDashboard from './components/AdminDashboard'
 import CustomerShop from './components/CustomerShop'
 import PurchaseHistory from './components/PurchaseHistory'
+import ContactPage from './components/ContactPage'
 import './components/AppStyles.css'
 
 const initialProducts = [
@@ -60,6 +61,11 @@ function App() {
   })
   const [customerView, setCustomerView] = useState('shop')
   const [searchQuery, setSearchQuery] = useState('')
+  const [comments, setComments] = useState(() => {
+    const saved = localStorage.getItem('storeComments')
+    return saved ? JSON.parse(saved) : []
+  })
+  const [commentText, setCommentText] = useState('')
   const [message, setMessage] = useState('')
   const [newProduct, setNewProduct] = useState({ name: '', price: '', stock: '', description: '', image: '' })
   const [editingProductId, setEditingProductId] = useState(null)
@@ -88,6 +94,10 @@ function App() {
   useEffect(() => {
     localStorage.setItem('storeOrderHistory', JSON.stringify(orderHistory))
   }, [orderHistory])
+
+  useEffect(() => {
+    localStorage.setItem('storeComments', JSON.stringify(comments))
+  }, [comments])
 
   const cartTotal = useMemo(
     () => cart.reduce((sum, item) => sum + item.quantity * item.price, 0),
@@ -152,6 +162,7 @@ function App() {
     setCart([])
     setCustomerView('shop')
     setSearchQuery('')
+    setCommentText('')
     setMessage('')
   }
 
@@ -226,6 +237,25 @@ function App() {
       })
     )
     setCart([])
+  }
+
+  const handleAddComment = () => {
+    const trimmed = commentText.trim()
+    if (!trimmed) {
+      setMessage('Please enter a comment before submitting.')
+      return
+    }
+
+    const newComment = {
+      id: Date.now(),
+      user: currentUser.name,
+      text: trimmed,
+      date: new Date().toISOString(),
+    }
+
+    setComments((current) => [newComment, ...current])
+    setCommentText('')
+    setMessage('Comment posted successfully.')
   }
 
   const handleSaveProduct = () => {
@@ -353,6 +383,12 @@ function App() {
                 >
                   Purchase History
                 </button>
+                <button
+                  onClick={() => setCustomerView('contact')}
+                  className={`button-secondary ${customerView === 'contact' ? 'active' : ''}`}
+                >
+                  Contact
+                </button>
                 <div className="rounded-3xl bg-white px-5 py-3 text-sm text-amber-950 border border-amber-200">
                   Cart: {cart.length} item{cart.length !== 1 ? 's' : ''}
                 </div>
@@ -385,6 +421,13 @@ function App() {
       ) : customerView === 'history' ? (
         <PurchaseHistory
           orders={orderHistory[currentUser.email] || []}
+        />
+      ) : customerView === 'contact' ? (
+        <ContactPage
+          comments={comments}
+          commentText={commentText}
+          onCommentChange={setCommentText}
+          onAddComment={handleAddComment}
         />
       ) : (
         <CustomerShop

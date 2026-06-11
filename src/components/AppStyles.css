@@ -372,6 +372,41 @@ body {
   color: #0f172a;
 }
 
+.contact-card,
+.comment-panel,
+.comment-card {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 1.75rem;
+  padding: 1.75rem;
+}
+
+.contact-row {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .contact-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.comment-list {
+  margin-top: 1.5rem;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+}
+
+.comment-card {
+  padding: 1.5rem;
+}
+
 .history-grid {
   display: grid;
   gap: 1.5rem;
