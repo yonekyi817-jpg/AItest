@@ -325,22 +325,22 @@ function App() {
     setMessage('User account active status updated.')
   }
 
-  const handleDeleteInactiveUser = (email) => {
+  const handleDeleteUser = (email) => {
     const target = users.find((user) => user.email === email)
     if (!target) {
       setMessage('Unable to find that account.')
-      return
-    }
-    if (target.active) {
-      setMessage('Only inactive accounts can be deleted.')
       return
     }
     if (target.role === 'admin') {
       setMessage('Admin accounts cannot be deleted here.')
       return
     }
+    if (target.email === currentUser?.email) {
+      setMessage('You cannot delete your own account while signed in.')
+      return
+    }
     setUsers((current) => current.filter((user) => user.email !== email))
-    setMessage('Inactive account deleted.')
+    setMessage('Account deleted.')
   }
 
   const handleSaveProduct = () => {
@@ -507,7 +507,7 @@ function App() {
           comments={comments}
           onToggleRoyalUser={handleToggleRoyalUser}
           onToggleActiveUser={handleToggleActiveUser}
-          onDeleteInactiveUser={handleDeleteInactiveUser}
+          onDeleteUser={handleDeleteUser}
         />
       ) : customerView === 'history' ? (
         <PurchaseHistory

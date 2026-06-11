@@ -16,7 +16,7 @@ export default function AdminDashboard({
   comments = [],
   onToggleRoyalUser,
   onToggleActiveUser,
-  onDeleteInactiveUser,
+  onDeleteUser,
 }) {
   const [searchQuery, setSearchQuery] = useState('')
   const [userQuery, setUserQuery] = useState('')
@@ -142,7 +142,7 @@ export default function AdminDashboard({
         <div className="flex items-center justify-between gap-4">
           <div>
             <h2 className="text-2xl font-semibold">Customer Accounts</h2>
-            <p className="mt-2 text-amber-700">Manage registered users, mark VIP customers, and remove inactive accounts.</p>
+            <p className="mt-2 text-amber-700">Manage registered users, mark VIP customers, and remove customer accounts as needed.</p>
           </div>
           <span className="rounded-full bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-700">
             {users.length} user{users.length !== 1 ? 's' : ''}
@@ -191,9 +191,9 @@ export default function AdminDashboard({
                     {user.active ? 'Deactivate' : 'Activate'}
                   </button>
                   <button
-                    onClick={() => onDeleteInactiveUser(user.email)}
+                    onClick={() => onDeleteUser(user.email)}
                     className="button-danger px-3 py-2 text-sm"
-                    disabled={user.active || user.role === 'admin' || user.email === currentUser?.email}
+                    disabled={user.role === 'admin' || user.email === currentUser?.email}
                   >
                     Delete
                   </button>
