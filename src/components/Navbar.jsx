@@ -18,7 +18,6 @@ export default function Navbar({ currentUser, onLogout }) {
           </div>
         </div>
       </div>
-      </div>
     </header>
   )
 }
